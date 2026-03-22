@@ -70,8 +70,8 @@ let chartAge = null;
  */
 export function renderCharts(filteredStats, fullStats, activeBrand = null, activeRegion = null) {
   renderTimeChart(filteredStats.byDate);
-  renderBrandChart(fullStats.byBrand, activeBrand);
-  renderRegionChart(fullStats.byRegion, activeRegion);
+  renderBrandChart(activeRegion ? filteredStats.byBrand : fullStats.byBrand, activeBrand);
+  renderRegionChart(activeBrand ? filteredStats.byRegion : fullStats.byRegion, activeRegion);
   renderFuelChart(filteredStats.byFuel);
   renderModelChart(filteredStats.byModel);
   renderOdometerChart(filteredStats.byModel);
