@@ -19,6 +19,7 @@ const defectsTableBody = document.getElementById('defectsTableBody');
 const avgOdometerEl = document.getElementById('avgOdometer');
 const filterBar = document.getElementById('filterBar');
 const filterText = document.getElementById('filterText');
+const helpTip = document.getElementById('helpTip');
 const clearFilterBtn = document.getElementById('clearFilter');
 
 let currentDays = 7;
@@ -107,6 +108,7 @@ function showCharts() {
   errorMessage.hidden = true;
   chartsGrid.hidden = false;
   defectsTableSection.hidden = false;
+  helpTip.hidden = false;
 }
 
 function updateSummaryCards(summary) {
