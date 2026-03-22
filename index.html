@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Přehled technických kontrol v ČR</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+  <header>
+    <h1>STK/SME visualizer</h1>
+    <p class="subtitle">Přehled technických kontrol vozidel v ČR</p>
+  </header>
+
+  <nav class="range-selector" id="rangeSelector">
+    <button data-days="7" class="active">7 dní</button>
+    <button data-days="30">30 dní</button>
+    <button data-days="60">60 dní</button>
+    <button data-days="90">90 dní</button>
+  </nav>
+
+  <section class="summary-cards" id="summaryCards">
+    <div class="card">
+      <span class="card-label">Celkem prohlídek</span>
+      <span class="card-value" id="totalInspections">—</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Úspěšnost</span>
+      <span class="card-value" id="passRate">—</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Období</span>
+      <span class="card-value" id="dateRange">—</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Prům. nájezd</span>
+      <span class="card-value" id="avgOdometer">—</span>
+    </div>
+  </section>
+
+  <section class="loading" id="loading">
+    <div class="loading-text" id="loadingText">Načítání dat...</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </section>
+
+  <section class="error-message" id="errorMessage" hidden>
+    <p id="errorText"></p>
+    <button id="retryBtn">Zkusit znovu</button>
+  </section>
+
+  <section class="filter-bar" id="filterBar" hidden>
+    <span id="filterText"></span>
+    <button id="clearFilter">Zrušit filtr</button>
+  </section>
+
+  <main class="charts-grid" id="chartsGrid" hidden>
+    <div class="chart-container">
+      <h2>Výsledky prohlídek v čase</h2>
+      <div class="chart-wrap"><canvas id="chartTime"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <h2>Prohlídky podle značky</h2>
+      <div class="chart-wrap"><canvas id="chartBrand"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <h2>Prohlídky podle kraje</h2>
+      <div class="chart-wrap"><canvas id="chartRegion"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <h2>Podle paliva</h2>
+      <div class="chart-wrap"><canvas id="chartFuel"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <h2>Nejčastější modely (top 15)</h2>
+      <div class="chart-wrap"><canvas id="chartModel"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <h2>Průměrný nájezd podle značky</h2>
+      <div class="chart-wrap"><canvas id="chartOdometer"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <h2>Nejčastější závady (top 15)</h2>
+      <div class="chart-wrap"><canvas id="chartDefects"></canvas></div>
+    </div>
+  </main>
+
+  <section class="defects-table-section" id="defectsTableSection" hidden>
+    <h2>Všechny zjištěné závady</h2>
+    <p class="defects-note">Popisy kódů jsou orientační (dle směrnice EU 2014/45).</p>
+    <div class="defects-table-wrap">
+      <table class="defects-table" id="defectsTable">
+        <thead>
+          <tr>
+            <th>Kód</th>
+            <th>Popis</th>
+            <th>Celkem</th>
+            <th>Lehká (A)</th>
+            <th>Významná (B)</th>
+            <th>Nebezpečná (C)</th>
+          </tr>
+        </thead>
+        <tbody id="defectsTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>Data: <a href="https://data.gov.cz" target="_blank" rel="noopener">Národní katalog otevřených dat</a> — Ministerstvo dopravy ČR</p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
