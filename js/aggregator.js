@@ -52,9 +52,13 @@ export function aggregate(records) {
     // By model (brand + model)
     if (r.model) {
       const modelKey = r.brand ? `${r.brand} ${r.model}` : r.model;
-      if (!byModel[modelKey]) byModel[modelKey] = { total: 0, pass: 0, minor: 0, fail: 0 };
+      if (!byModel[modelKey]) byModel[modelKey] = { total: 0, pass: 0, minor: 0, fail: 0, odometerSum: 0, odometerCount: 0 };
       byModel[modelKey].total++;
       incrementResult(byModel[modelKey], r.result);
+      if (r.odometer > 0) {
+        byModel[modelKey].odometerSum += r.odometer;
+        byModel[modelKey].odometerCount++;
+      }
     }
 
     // Defects
@@ -64,6 +68,22 @@ export function aggregate(records) {
       if (d.zavaznost === 'A') defects[d.kod].A++;
       else if (d.zavaznost === 'B') defects[d.kod].B++;
       else if (d.zavaznost === 'C') defects[d.kod].C++;
+    }
+
+    // Vehicle age by brand and model
+    if (r.firstReg && r.date) {
+      const regYear = parseInt(r.firstReg.slice(0, 4), 10);
+      const inspYear = parseInt(r.date.slice(0, 4), 10);
+      const age = inspYear - regYear;
+      if (age >= 0 && age < 100) {
+        byBrand[brand].ageSum = (byBrand[brand].ageSum || 0) + age;
+        byBrand[brand].ageCount = (byBrand[brand].ageCount || 0) + 1;
+        if (r.model) {
+          const modelKey = r.brand ? `${r.brand} ${r.model}` : r.model;
+          byModel[modelKey].ageSum = (byModel[modelKey].ageSum || 0) + age;
+          byModel[modelKey].ageCount = (byModel[modelKey].ageCount || 0) + 1;
+        }
+      }
     }
 
     // Totals

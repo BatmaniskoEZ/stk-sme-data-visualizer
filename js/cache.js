@@ -1,15 +1,16 @@
 const DB_NAME = 'stk-dashboard';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const STORE_NAME = 'daily-records';
 
 function openDB() {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onupgradeneeded = () => {
+    req.onupgradeneeded = () => { //verze up = recreate local
       const db = req.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'date' });
+      if (db.objectStoreNames.contains(STORE_NAME)) {
+        db.deleteObjectStore(STORE_NAME);
       }
+      db.createObjectStore(STORE_NAME, { keyPath: 'date' });
     };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);

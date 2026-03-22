@@ -78,8 +78,12 @@
       <div class="chart-wrap"><canvas id="chartModel"></canvas></div>
     </div>
     <div class="chart-container">
-      <h2>Průměrný nájezd podle značky</h2>
+      <h2>Průměrný nájezd podle modelu (top 15)</h2>
       <div class="chart-wrap"><canvas id="chartOdometer"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <h2>Průměrný věk vozidla (top 15)</h2>
+      <div class="chart-wrap"><canvas id="chartAge"></canvas></div>
     </div>
     <div class="chart-container">
       <h2>Nejčastější závady (top 15)</h2>
@@ -89,7 +93,13 @@
 
   <section class="defects-table-section" id="defectsTableSection" hidden>
     <h2>Všechny zjištěné závady</h2>
-    <p class="defects-note">Popisy kódů jsou orientační (dle směrnice EU 2014/45).</p>
+    <p class="defects-note">Dle Vyhlášky č. 211/2018 Sb. (zdroj: <a href="https://stk.opendatalab.cz/defects" target="_blank" rel="noopener">STK Portál</a>)</p>
+    <div class="sev-filter" id="sevFilter">
+      <span>Filtr závažnosti:</span>
+      <button data-sev="A" class="sev-btn sev-btn-a">Lehká (A)</button>
+      <button data-sev="B" class="sev-btn sev-btn-b">Významná (B)</button>
+      <button data-sev="C" class="sev-btn sev-btn-c">Nebezpečná (C)</button>
+    </div>
     <div class="defects-table-wrap">
       <table class="defects-table" id="defectsTable">
         <thead>
@@ -109,6 +119,7 @@
 
   <footer>
     <p>Data: <a href="https://data.gov.cz" target="_blank" rel="noopener">Národní katalog otevřených dat</a> — Ministerstvo dopravy ČR</p>
+    <p>Číselník závad: <a href="https://stk.opendatalab.cz/defects" target="_blank" rel="noopener">STK Portál</a> — dle Vyhlášky č. 211/2018 Sb.</p>
   </footer>
 
   <script type="module" src="js/app.js"></script>

@@ -58,9 +58,11 @@ function extractRecords(doc) {
     const fuel = emisniCast ? getTextNS(emisniCast, NS_PROHLIDKA, 'ZakladniPalivo') : '';
     const vysledek = p.getElementsByTagNameNS(NS_PROHLIDKA, 'Vysledek')[0];
     const odometer = vysledek ? parseInt(getTextNS(vysledek, NS_PROHLIDKA, 'Odometr'), 10) || 0 : 0;
+    const registrace = p.getElementsByTagNameNS(NS_PROHLIDKA, 'Registrace')[0];
+    const firstReg = registrace ? getTextNS(registrace, NS_PROHLIDKA, 'DatumPrvniRegistrace') : '';
     const defects = getDefects(p);
 
-    records.push({ date, region, brand, model, engineType, fuel, odometer, result, defects });
+    records.push({ date, region, brand, model, engineType, fuel, odometer, firstReg, result, defects });
   }
 
   return records;

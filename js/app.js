@@ -1,7 +1,7 @@
 import { discoverDatasets, discoverLatestDate } from './discovery.js';
 import { fetchAllWithProgress } from './parser.js';
 import { aggregate } from './aggregator.js';
-import { renderCharts, destroyCharts, defectLabel, onBrandClick, onRegionClick } from './charts.js';
+import { renderCharts, destroyCharts, defectLabel, defectLookup, loadDefectNames, onBrandClick, onRegionClick } from './charts.js';
 
 // DOM elements
 const loadingEl = document.getElementById('loading');
@@ -177,18 +177,30 @@ async function loadDashboard(days) {
   }
 }
 
+let currentDefects = {};
+let activeSevFilter = null;
+
 function renderDefectsTable(defects) {
-  const sorted = Object.entries(defects)
-    .sort((a, b) => b[1].count - a[1].count);
+  currentDefects = defects;
+  updateDefectsTableRows();
+}
+
+function updateDefectsTableRows() {
+  const sorted = Object.entries(currentDefects)
+    .filter(([, v]) => {
+      if (!activeSevFilter) return true;
+      return (v[activeSevFilter] || 0) > 0;
+    })
+    .sort((a, b) => {
+      if (activeSevFilter) return (b[1][activeSevFilter] || 0) - (a[1][activeSevFilter] || 0);
+      return b[1].count - a[1].count;
+    });
 
   defectsTableBody.innerHTML = sorted.map(([code, v]) => {
-    const desc = defectLabel(code);
-    const parts = desc.split(' – ');
-    const displayCode = parts[0];
-    const displayDesc = parts[1] || '';
+    const { description } = defectLookup(code);
     return `<tr>
-      <td><strong>${displayCode}</strong></td>
-      <td>${displayDesc}</td>
+      <td><strong>${code}</strong></td>
+      <td>${description}</td>
       <td>${v.count.toLocaleString('cs-CZ')}</td>
       <td class="sev-a">${v.A || 0}</td>
       <td class="sev-b">${v.B || 0}</td>
@@ -197,5 +209,15 @@ function renderDefectsTable(defects) {
   }).join('');
 }
 
+// Severity filter for defects table
+document.getElementById('sevFilter').addEventListener('click', (e) => {
+  if (e.target.tagName !== 'BUTTON') return;
+  const sev = e.target.dataset.sev || null;
+  activeSevFilter = sev === activeSevFilter ? null : sev;
+  document.querySelectorAll('#sevFilter button').forEach(b => b.classList.remove('active'));
+  if (activeSevFilter) e.target.classList.add('active');
+  updateDefectsTableRows();
+});
+
 // Start with default range
-loadDashboard(currentDays);
+loadDefectNames().then(() => loadDashboard(currentDays));
